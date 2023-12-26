@@ -23,8 +23,11 @@ public class Player : MonoBehaviour
     //에임 회전할때 우측에 있는지 확인하기 위함
     private bool isPlayerLookAtRightDirection;
     Transform trsHand;
+    [Header("투척공격")]
+    [SerializeField] GameObject objThrowKnife;
+    Transform trsThrowKnife;
+    [SerializeField] Transform trsObjDynamic;
 
-    
 
 
     private void OnDrawGizmos()
@@ -43,6 +46,7 @@ public class Player : MonoBehaviour
         boxCollider2D = GetComponent<BoxCollider2D>();
         trsHand = transform.GetChild(0);
         anim = GetComponent<Animator>();
+        trsThrowKnife = transform.Find("ThrowPos");
     }
 
     // Start is called before the first frame update
@@ -54,6 +58,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        doAnimation();
+
         moving();
         checkGround();
 
@@ -62,6 +68,15 @@ public class Player : MonoBehaviour
         checkGravity();
 
         checkMouse();
+
+    }
+
+    private void doAnimation()
+    {
+        anim.SetBool("IsGround", isGround);
+        anim.SetInteger("Horizontal", (int)moveDir.x);
+
+        int curHorizontal = anim.GetInteger("Horizontal");
     }
 
     /// <summary>
@@ -169,5 +184,28 @@ public class Player : MonoBehaviour
         }
         trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x, 
             trsHand.localEulerAngles.y, angle);
+        //나이프 던짐
+        if (/*GamePause == false &&*/ Input.GetKeyDown(KeyCode.Q))
+        {
+            throwKnife();
+            //throwTimer = throwlimit;
+        }
+    }
+
+    private void throwKnife()
+    {
+        Vector3 rot = trsThrowKnife.localRotation.eulerAngles;
+        rot.z += -90;
+        GameObject obj = Instantiate(objThrowKnife, trsThrowKnife.position, Quaternion.Euler(rot), trsObjDynamic);
+        ThrowKnife sc = obj.GetComponent<ThrowKnife>();
+        Vector2 throwForce = new Vector2(10.0f, 0f);
+        if (isPlayerLookAtRightDirection == false)
+        {
+            //throwForce = new Vector2(-10.0f, 0f);
+            throwForce.x = -10.0f;
+            
+        }
+        //sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
+        sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
     }
 }
