@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject objThrowKnife;
     Transform trsThrowKnife;
     [SerializeField] Transform trsObjDynamic;
+    
 
 
 
@@ -184,6 +185,7 @@ public class Player : MonoBehaviour
         }
         trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x, 
             trsHand.localEulerAngles.y, angle);
+
         //³ªÀÌÇÁ ´øÁü
         if (/*GamePause == false &&*/ Input.GetKeyDown(KeyCode.Q))
         {
@@ -196,16 +198,20 @@ public class Player : MonoBehaviour
     {
         Vector3 rot = trsThrowKnife.localRotation.eulerAngles;
         rot.z += -90;
+        if(isPlayerLookAtRightDirection == false)
+        {
+            rot.z = +90; 
+        }
         GameObject obj = Instantiate(objThrowKnife, trsThrowKnife.position, Quaternion.Euler(rot), trsObjDynamic);
         ThrowKnife sc = obj.GetComponent<ThrowKnife>();
-        Vector2 throwForce = new Vector2(10.0f, 0f);
+        Vector2 throwForce = new Vector2(10.0f, 0f);// * Time.deltaTime *speed;
         if (isPlayerLookAtRightDirection == false)
         {
-            //throwForce = new Vector2(-10.0f, 0f);
-            throwForce.x = -10.0f;
-            
+            throwForce = new Vector2(-10.0f, 0f);// * Time.deltaTime * speed;
+            //throwForce.x = -10.0f;
+
         }
-        //sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
+        
         sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
     }
 }
