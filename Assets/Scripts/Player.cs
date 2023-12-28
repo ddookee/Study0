@@ -11,8 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] float moveSpeed = 5f;
 
     BoxCollider2D boxCollider2D;
+    [Header("플레이어")]
     [SerializeField] bool isGround = false;
-
     private float verticalVelocity;
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] private float jumpForce = 5;
@@ -27,7 +27,9 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject objThrowKnife;
     Transform trsThrowKnife;
     [SerializeField] Transform trsObjDynamic;
-    
+
+    Collider2D attackColl;
+    private bool isAttack = false;
 
 
 
@@ -48,6 +50,8 @@ public class Player : MonoBehaviour
         trsHand = transform.GetChild(0);
         anim = GetComponent<Animator>();
         trsThrowKnife = transform.Find("ThrowPos");
+        Transform childAttack = transform.Find("AttackPos");
+        attackColl = childAttack.GetComponent<BoxCollider2D>();
     }
 
     // Start is called before the first frame update
@@ -78,6 +82,15 @@ public class Player : MonoBehaviour
         anim.SetInteger("Horizontal", (int)moveDir.x);
 
         int curHorizontal = anim.GetInteger("Horizontal");
+
+
+        //근접공격 애니메이션
+        anim.SetBool("Attack", isAttack);
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            isAttack = true;
+        }
     }
 
     /// <summary>
@@ -194,6 +207,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 칼을 던지는 스킬
+    /// </summary>
     private void throwKnife()
     {
         Vector3 rot = trsThrowKnife.localRotation.eulerAngles;
@@ -213,5 +229,20 @@ public class Player : MonoBehaviour
         }
         
         sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
+    }
+
+    private void attack()
+    {
+
+    }
+    
+    private void onAttack()
+    {
+        attackColl.enabled = true;
+    }
+
+    private void offAttack()
+    {
+        attackColl.enabled = false;
     }
 }
