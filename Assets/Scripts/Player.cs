@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public enum hitType
+    {
+        HitCheck,
+    }
+
     Animator anim;
 
     Rigidbody2D rigid;
@@ -27,7 +32,11 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject objThrowKnife;
     Transform trsThrowKnife;
     [SerializeField] Transform trsObjDynamic;
+    [SerializeField] float throwlimit = 0.3f;
+    float throwTimer;
 
+    [Header("기본근접공격")]
+    [SerializeField] private float attackDamage;
     Collider2D attackColl;
     private bool isAttack = false;
 
@@ -199,11 +208,12 @@ public class Player : MonoBehaviour
         trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x, 
             trsHand.localEulerAngles.y, angle);
 
+
         //나이프 던짐
         if (/*GamePause == false &&*/ Input.GetKeyDown(KeyCode.Q))
         {
             throwKnife();
-            //throwTimer = throwlimit;
+            throwTimer = throwlimit;
         }
     }
 
@@ -231,18 +241,45 @@ public class Player : MonoBehaviour
         sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
     }
 
-    private void attack()
+    /// <summary>
+    /// 기본근접 공격
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <param name="_collision"></param>
+    public void TriggerEnter(hitType _type, Collider2D _collision)
     {
-
+        if(_type == hitType.HitCheck && _collision.gameObject.tag == GameTag.Enemy.ToString())
+        {
+            Enemy enemySc = _collision.GetComponent<Enemy>();
+            enemySc.Hit(attackDamage);
+        }
     }
-    
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == GameTag.Enemy.ToString())
+    //    {
+    //        Enemy enemySc = collision.GetComponent<Enemy>();
+    //        enemySc.Hit(attackDamage);
+    //    }
+    //}
+
+    /// <summary>
+    /// 기본공격 콜라이더 활성화
+    /// </summary>
     private void onAttack()
     {
         attackColl.enabled = true;
     }
 
+    /// <summary>
+    /// 기본공격 콜라이더 비활성화
+    /// </summary>
     private void offAttack()
     {
         attackColl.enabled = false;
+
+        //Attack 애니메이션 false로 만들어줌
+        isAttack = false;
     }
 }

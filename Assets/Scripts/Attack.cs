@@ -8,6 +8,7 @@ public class Attack : MonoBehaviour
 
     [SerializeField] private float damage = 1f;
 
+
     // Start is called before the first frame update
     void Start()
     {
