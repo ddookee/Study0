@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private float MaxHp = 3;
     private float CurHp = 0;
-
+    public float damage = 1;
 
     private void Awake()
     {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,6 +8,7 @@ public class Player : MonoBehaviour
     public enum hitType
     {
         HitCheck,
+        EnemyCheck,
     }
 
     Animator anim;
@@ -22,6 +24,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] private float jumpForce = 5;
     private bool isJump = false;
+    //플레이어의 체력
+    [SerializeField] private float MaxHp = 3;
+    private float CurHp;
 
     private Camera mainCam;
 
@@ -40,6 +45,12 @@ public class Player : MonoBehaviour
     Collider2D attackColl;
     private bool isAttack = false;
 
+    [Header("회전 공격")]
+    [SerializeField] private float RotATKDamage;
+    Collider2D RotATKColl;
+    private bool isRotATK = false;
+    
+
 
 
     private void OnDrawGizmos()
@@ -54,15 +65,26 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        //플레이어의 체력
+        CurHp = MaxHp;
+
         rigid = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         trsHand = transform.GetChild(0);
+
         anim = GetComponent<Animator>();
+
+        //플레이어의 공격
         trsThrowKnife = transform.Find("ThrowPos");
         Transform childAttack = transform.Find("AttackPos");
         attackColl = childAttack.GetComponent<BoxCollider2D>();
+        //회전공격
+        Transform childRotATK = transform.Find("RotateATKPos");
+        RotATKColl = childRotATK.GetComponent<BoxCollider2D>();
+
     }
 
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -72,6 +94,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         doAnimation();
 
         moving();
@@ -83,6 +106,28 @@ public class Player : MonoBehaviour
 
         checkMouse();
 
+    }
+
+
+    public void TriggerEnter(hitType _type, Collider2D _collision)
+    {
+        //적에게 닿으면 대미지를 받음
+        if (_type == hitType.EnemyCheck && _collision.gameObject.tag == GameTag.Enemy.ToString())
+        {
+            Enemy enemySc = _collision.gameObject.GetComponent<Enemy>();
+            CurHp -= enemySc.damage;
+            if ( CurHp <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        //적에게 근접공격으로 인한 대미지를 입힘
+        else if (_type == hitType.HitCheck && _collision.gameObject.tag == GameTag.Enemy.ToString())
+        {
+            Enemy enemySc = _collision.GetComponent<Enemy>();
+            enemySc.Hit(attackDamage);
+        }
     }
 
     private void doAnimation()
@@ -99,6 +144,13 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             isAttack = true;
+        }
+
+        //회전하며 공격하는 애니메이션
+        anim.SetBool("RotateATK", isRotATK);
+        if (Input.GetKey(KeyCode.E))
+        {
+            isRotATK = true;
         }
     }
 
@@ -241,19 +293,7 @@ public class Player : MonoBehaviour
         sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
     }
 
-    /// <summary>
-    /// 기본근접 공격
-    /// </summary>
-    /// <param name="_type"></param>
-    /// <param name="_collision"></param>
-    public void TriggerEnter(hitType _type, Collider2D _collision)
-    {
-        if(_type == hitType.HitCheck && _collision.gameObject.tag == GameTag.Enemy.ToString())
-        {
-            Enemy enemySc = _collision.GetComponent<Enemy>();
-            enemySc.Hit(attackDamage);
-        }
-    }
+    
 
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
@@ -269,7 +309,10 @@ public class Player : MonoBehaviour
     /// </summary>
     private void onAttack()
     {
+        //기본공격
         attackColl.enabled = true;
+        //회전공격
+        RotATKColl.enabled = true;
     }
 
     /// <summary>
@@ -277,9 +320,19 @@ public class Player : MonoBehaviour
     /// </summary>
     private void offAttack()
     {
+        //기본공격
         attackColl.enabled = false;
+        //회전공격
+        RotATKColl.enabled = false;
 
         //Attack 애니메이션 false로 만들어줌
         isAttack = false;
+        //회전공격 애니메이션을 false로
+        if (isRotATK == true && Input.GetKey(KeyCode.E))
+        {
+            
+            
+            isRotATK = false; 
+        }
     }
 }
