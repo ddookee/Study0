@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     {
         HitCheck,
         EnemyCheck,
+        RotATKCheck,
     }
 
     Animator anim;
@@ -38,7 +39,7 @@ public class Player : MonoBehaviour
     Transform trsThrowKnife;
     [SerializeField] Transform trsObjDynamic;
     [SerializeField] float throwlimit = 0.3f;
-    float throwTimer;
+    float throwTimer = 0.0f;
 
     [Header("기본근접공격")]
     [SerializeField] private float attackDamage;
@@ -46,10 +47,10 @@ public class Player : MonoBehaviour
     private bool isAttack = false;
 
     [Header("회전 공격")]
-    [SerializeField] private float RotATKDamage;
+    [SerializeField] private float RotATKDamage = 0;
     Collider2D RotATKColl;
     private bool isRotATK = false;
-    
+
 
 
 
@@ -84,7 +85,7 @@ public class Player : MonoBehaviour
 
     }
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -116,7 +117,7 @@ public class Player : MonoBehaviour
         {
             Enemy enemySc = _collision.gameObject.GetComponent<Enemy>();
             CurHp -= enemySc.damage;
-            if ( CurHp <= 0)
+            if (CurHp <= 0)
             {
                 Destroy(gameObject);
             }
@@ -127,6 +128,13 @@ public class Player : MonoBehaviour
         {
             Enemy enemySc = _collision.GetComponent<Enemy>();
             enemySc.Hit(attackDamage);
+        }
+
+        //회전 공격의 의한 대미지를 입힘
+        else if (_type == hitType.RotATKCheck && _collision.gameObject.tag == GameTag.Enemy.ToString())
+        {
+            Enemy enemySc = _collision.GetComponent<Enemy>();
+            enemySc.Hit(RotATKDamage);
         }
     }
 
@@ -146,11 +154,32 @@ public class Player : MonoBehaviour
             isAttack = true;
         }
 
+
+
         //회전하며 공격하는 애니메이션
         anim.SetBool("RotateATK", isRotATK);
         if (Input.GetKey(KeyCode.E))
         {
+            //float count = 0;
             isRotATK = true;
+
+        //    if (isRotATK == true)
+        //    {
+        //        for (int iNum = 3; count < iNum; count += 1)
+        //        {
+        //            //if(count == 3)
+        //            //{
+        //            //    count = 0;
+        //            //    isRotATK = false;
+        //            //}
+
+        //        }
+        //        if (count == 3)
+        //        {
+        //            count = 0;
+        //            isRotATK = false;
+        //        }
+        //    }
         }
     }
 
@@ -170,7 +199,7 @@ public class Player : MonoBehaviour
     private void checkGround()
     {
         isGround = false;
-        if(verticalVelocity > 0)
+        if (verticalVelocity > 0)
         {
             return;
         }
@@ -185,11 +214,11 @@ public class Player : MonoBehaviour
 
     private void checkJumping()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && isGround == true)
+        if (Input.GetKeyDown(KeyCode.Space) && isGround == true)
         {
             isJump = true;
         }
-        
+
     }
     /// <summary>
     /// 중력체크
@@ -199,7 +228,7 @@ public class Player : MonoBehaviour
         if (isGround == false)
         {
             verticalVelocity -= gravity * Time.deltaTime;
-            if(verticalVelocity < -10.0f)
+            if (verticalVelocity < -10.0f)
             {
                 verticalVelocity = -10;
             }
@@ -233,16 +262,16 @@ public class Player : MonoBehaviour
         //마우스의 좌우 확인
         //우측을 바라보는
         Vector3 distanceMouseToPlayer = mouseWorldPos - transform.position;
-        if(distanceMouseToPlayer.x > 0)
+        if (distanceMouseToPlayer.x > 0)
         {
-            transform.localScale = new Vector3(-1,1,1);
+            transform.localScale = new Vector3(-1, 1, 1);
             isPlayerLookAtRightDirection = true;
         }
 
         //좌측을 바라보는
-        else if(distanceMouseToPlayer.x < 0)
+        else if (distanceMouseToPlayer.x < 0)
         {
-            transform.localScale = new Vector3(1,1,1);
+            transform.localScale = new Vector3(1, 1, 1);
             isPlayerLookAtRightDirection = false;
         }
 
@@ -257,12 +286,21 @@ public class Player : MonoBehaviour
         {
             angle = -angle;
         }
-        trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x, 
+        trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x,
             trsHand.localEulerAngles.y, angle);
 
 
+        if (throwTimer != 0.0f)
+        {
+            throwTimer -= Time.deltaTime;
+            if (throwTimer < 0.0f)
+            {
+                throwTimer = 0.0f;
+            }
+        }
+
         //나이프 던짐
-        if (/*GamePause == false &&*/ Input.GetKeyDown(KeyCode.Q))
+        if (/*GamePause == false &&*/ Input.GetKeyDown(KeyCode.Q) && throwTimer == 0.0f)
         {
             throwKnife();
             throwTimer = throwlimit;
@@ -276,9 +314,9 @@ public class Player : MonoBehaviour
     {
         Vector3 rot = trsThrowKnife.localRotation.eulerAngles;
         rot.z += -90;
-        if(isPlayerLookAtRightDirection == false)
+        if (isPlayerLookAtRightDirection == false)
         {
-            rot.z = +90; 
+            rot.z = +90;
         }
         GameObject obj = Instantiate(objThrowKnife, trsThrowKnife.position, Quaternion.Euler(rot), trsObjDynamic);
         ThrowKnife sc = obj.GetComponent<ThrowKnife>();
@@ -289,11 +327,11 @@ public class Player : MonoBehaviour
             //throwForce.x = -10.0f;
 
         }
-        
+
         sc.SetForce(trsThrowKnife.rotation * throwForce, isPlayerLookAtRightDirection);
     }
 
-    
+
 
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
@@ -327,12 +365,31 @@ public class Player : MonoBehaviour
 
         //Attack 애니메이션 false로 만들어줌
         isAttack = false;
+
         //회전공격 애니메이션을 false로
-        if (isRotATK == true && Input.GetKey(KeyCode.E))
+        //if (isRotATK == true && Input.GetKey(KeyCode.E))
+        //{
+
+
+        //    isRotATK = false; 
+        //}
+
+        if (isRotATK == true)
         {
-            
-            
-            isRotATK = false; 
+            //for (int iNum = 3; count < iNum; count += 1)
+            //{
+            //    //if(count == 3)
+            //    //{
+            //    //    count = 0;
+            //    //    isRotATK = false;
+            //    //}
+
+            //}
+            //if (count == 3)
+            //{
+            //    count = 0;
+                isRotATK = false;
+            //}
         }
     }
 }

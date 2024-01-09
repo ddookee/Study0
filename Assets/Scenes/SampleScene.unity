@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 110981324}
   - component: {fileID: 110981325}
+  - component: {fileID: 110981326}
   m_Layer: 6
   m_Name: RotateATKPos
   m_TagString: Untagged
@@ -162,7 +163,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 110981323}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -200,6 +201,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.6405778, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &110981326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110981323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7cb5334e6a757f4b83ad873fc3a8728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitType: 2
 --- !u!1 &122609011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1544,7 +1558,7 @@ MonoBehaviour:
   MaxHp: 3
   objThrowKnife: {fileID: 120585447653750452, guid: cccf9e7a4d665124fbe6c2d9f361861e, type: 3}
   trsObjDynamic: {fileID: 1845608729}
-  throwlimit: 0.3
+  throwlimit: 1
   attackDamage: 1
   RotATKDamage: 0
 --- !u!50 &1604954043
