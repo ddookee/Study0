@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float RotATKDamage = 0;
     Collider2D RotATKColl;
     private bool isRotATK = false;
+    int count = 0;
 
 
 
@@ -160,26 +161,8 @@ public class Player : MonoBehaviour
         anim.SetBool("RotateATK", isRotATK);
         if (Input.GetKey(KeyCode.E))
         {
-            //float count = 0;
             isRotATK = true;
 
-        //    if (isRotATK == true)
-        //    {
-        //        for (int iNum = 3; count < iNum; count += 1)
-        //        {
-        //            //if(count == 3)
-        //            //{
-        //            //    count = 0;
-        //            //    isRotATK = false;
-        //            //}
-
-        //        }
-        //        if (count == 3)
-        //        {
-        //            count = 0;
-        //            isRotATK = false;
-        //        }
-        //    }
         }
     }
 
@@ -349,8 +332,15 @@ public class Player : MonoBehaviour
     {
         //기본공격
         attackColl.enabled = true;
+    }
+    /// <summary>
+    /// 회전공격 콜라이더 활성화
+    /// </summary>
+    private void onRotATK()
+    {
         //회전공격
         RotATKColl.enabled = true;
+
     }
 
     /// <summary>
@@ -360,36 +350,54 @@ public class Player : MonoBehaviour
     {
         //기본공격
         attackColl.enabled = false;
-        //회전공격
-        RotATKColl.enabled = false;
 
         //Attack 애니메이션 false로 만들어줌
         isAttack = false;
 
+    }
+    /// <summary>
+    /// 회전 공격 콜라이더 비활성화
+    /// </summary>
+    private void offRotATK()
+    {
+        //회전공격
+        RotATKColl.enabled = false;
+
         //회전공격 애니메이션을 false로
-        //if (isRotATK == true && Input.GetKey(KeyCode.E))
-        //{
-
-
-        //    isRotATK = false; 
-        //}
-
-        if (isRotATK == true)
+        count++;
+        rotCase();
+    }
+    private void rotCase()
+    {
+        Debug.Log(count);
+        switch (count)
         {
-            //for (int iNum = 3; count < iNum; count += 1)
-            //{
-            //    //if(count == 3)
-            //    //{
-            //    //    count = 0;
-            //    //    isRotATK = false;
-            //    //}
-
-            //}
-            //if (count == 3)
-            //{
-            //    count = 0;
-                isRotATK = false;
-            //}
+            case 1:
+                {
+                    if (Input.GetKey(KeyCode.E))
+                    {
+                        isRotATK = true;
+                    }
+                    
+                }
+                break;
+            case 2:
+                {
+                    if (Input.GetKey(KeyCode.E))
+                    {
+                        isRotATK = true;
+                    }
+                }
+                break;
+            case 3:
+                {
+                    //Input.GetKey(KeyCode.E);
+                    isRotATK = false;
+                    count = 0;
+                }
+                break;
+            default:
+                break;
         }
     }
 }
