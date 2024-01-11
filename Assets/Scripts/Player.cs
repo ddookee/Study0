@@ -12,10 +12,20 @@ public class Player : MonoBehaviour
         RotATKCheck,
     }
 
-    Animator anim;
+    //Animator anim;
 
     Rigidbody2D rigid;
     Vector3 moveDir;
+    public Vector3 MoveDir
+    {
+        get => moveDir; //{return moveDir}
+        set => moveDir = value; //{moveDir = value;}
+    }
+    public Vector3 GetMoveDir()
+    {
+        return moveDir;
+    }
+
     [SerializeField] float moveSpeed = 5f;
 
     BoxCollider2D boxCollider2D;
@@ -74,14 +84,17 @@ public class Player : MonoBehaviour
         boxCollider2D = GetComponent<BoxCollider2D>();
         trsHand = transform.GetChild(0);
 
-        anim = GetComponent<Animator>();
+        //anim = GetComponent<Animator>();
 
         //플레이어의 공격
-        trsThrowKnife = transform.Find("ThrowPos");
-        Transform childAttack = transform.Find("AttackPos");
+        Transform childPlayerAnim = transform.Find("PlayerAnim");
+
+        trsThrowKnife = childPlayerAnim.Find("ThrowPos");
+
+        Transform childAttack = childPlayerAnim.Find("AttackPos");
         attackColl = childAttack.GetComponent<BoxCollider2D>();
         //회전공격
-        Transform childRotATK = transform.Find("RotateATKPos");
+        Transform childRotATK = childPlayerAnim.Find("RotateATKPos");
         RotATKColl = childRotATK.GetComponent<BoxCollider2D>();
 
     }
@@ -97,7 +110,7 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        doAnimation();
+        //doAnimation();
 
         moving();
         checkGround();
@@ -139,32 +152,32 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void doAnimation()
-    {
-        anim.SetBool("IsGround", isGround);
-        anim.SetInteger("Horizontal", (int)moveDir.x);
+    //private void doAnimation()
+    //{
+    //    anim.SetBool("IsGround", isGround);
+    //    anim.SetInteger("Horizontal", (int)moveDir.x);
 
-        int curHorizontal = anim.GetInteger("Horizontal");
-
-
-        //근접공격 애니메이션
-        anim.SetBool("Attack", isAttack);
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            isAttack = true;
-        }
+    //    int curHorizontal = anim.GetInteger("Horizontal");
 
 
+    //    //근접공격 애니메이션
+    //    anim.SetBool("Attack", isAttack);
 
-        //회전하며 공격하는 애니메이션
-        anim.SetBool("RotateATK", isRotATK);
-        if (Input.GetKey(KeyCode.E))
-        {
-            isRotATK = true;
+    //    if (Input.GetKeyDown(KeyCode.Mouse0))
+    //    {
+    //        isAttack = true;
+    //    }
 
-        }
-    }
+
+
+    //    //회전하며 공격하는 애니메이션
+    //    anim.SetBool("RotateATK", isRotATK);
+    //    if (Input.GetKey(KeyCode.E))
+    //    {
+    //        isRotATK = true;
+
+    //    }
+    //}
 
     /// <summary>
     /// 캐릭터의 움직임
