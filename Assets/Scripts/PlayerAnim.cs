@@ -19,6 +19,9 @@ public class PlayerAnim : MonoBehaviour
     private bool isRotATK = false;
     int count = 0;
 
+    float timerRotAtk = 0.0f;
+    [SerializeField] float timerLimitRotAtk = 0.1f; 
+
 
     private void Awake()
     {
@@ -47,7 +50,7 @@ public class PlayerAnim : MonoBehaviour
         doAnimation();
 
         checkGround();
-
+        checkCooltime();
     }
 
     private void doAnimation()
@@ -105,7 +108,10 @@ public class PlayerAnim : MonoBehaviour
     private void onRotATK()
     {
         //회전공격
-        RotATKColl.enabled = true;
+        if (count == 0)
+        { 
+            RotATKColl.enabled = true;
+        }
 
     }
 
@@ -128,11 +134,6 @@ public class PlayerAnim : MonoBehaviour
     private void offRotATK()
     {
         //회전공격
-        if (isRotATK == false)
-        {
-            RotATKColl.enabled = false;
-
-        }
         count++;
         rotCase();
 
@@ -166,13 +167,26 @@ public class PlayerAnim : MonoBehaviour
                 break;
             case 3:
                 {
-                    //Input.GetKey(KeyCode.E);
                     isRotATK = false;
-                    count = 0;
+                    RotATKColl.enabled = false;//회전이 끝나고 콜라이더를 비활성화 해줌
+                    timerRotAtk = timerLimitRotAtk;//쿨타임으로 바로 들어가지 않게 해줌
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    private void checkCooltime()
+    {
+        if (timerRotAtk > 0.0f)//타이머가 0보다 크면 점점 줄어듦
+        {
+            timerRotAtk -= Time.deltaTime;
+            if (timerRotAtk < 0.0f)//타이머가 0보다 작으면 같게 만들어줌
+            {
+                timerRotAtk = 0.0f;
+                count = 0;//카운트를 쿨타임이 끝났을때 0으로 만들어줌
+            }
         }
     }
 }

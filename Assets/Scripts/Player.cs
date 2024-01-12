@@ -53,13 +53,13 @@ public class Player : MonoBehaviour
 
     [Header("기본근접공격")]
     [SerializeField] private float attackDamage;
-    Collider2D attackColl;
-    private bool isAttack = false;
+    //Collider2D attackColl;
+    //private bool isAttack = false;
 
     [Header("회전 공격")]
     [SerializeField] private float RotATKDamage = 0;
-    Collider2D RotATKColl;
-    private bool isRotATK = false;
+    //Collider2D RotATKColl;
+    //private bool isRotATK = false;
     int count = 0;
 
 
@@ -91,11 +91,11 @@ public class Player : MonoBehaviour
 
         trsThrowKnife = childPlayerAnim.Find("ThrowPos");
 
-        Transform childAttack = childPlayerAnim.Find("AttackPos");
-        attackColl = childAttack.GetComponent<BoxCollider2D>();
-        //회전공격
-        Transform childRotATK = childPlayerAnim.Find("RotateATKPos");
-        RotATKColl = childRotATK.GetComponent<BoxCollider2D>();
+        //Transform childAttack = childPlayerAnim.Find("AttackPos");
+        //attackColl = childAttack.GetComponent<BoxCollider2D>();
+        ////회전공격
+        //Transform childRotATK = childPlayerAnim.Find("RotateATKPos");
+        //RotATKColl = childRotATK.GetComponent<BoxCollider2D>();
 
     }
 
@@ -341,76 +341,76 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 기본공격 콜라이더 활성화
     /// </summary>
-    private void onAttack()
-    {
-        //기본공격
-        attackColl.enabled = true;
-    }
+    //private void onAttack()
+    //{
+    //    //기본공격
+    //    attackColl.enabled = true;
+    //}
     /// <summary>
     /// 회전공격 콜라이더 활성화
     /// </summary>
-    private void onRotATK()
-    {
-        //회전공격
-        RotATKColl.enabled = true;
+    //private void onRotATK()
+    //{
+    //    //회전공격
+    //    RotATKColl.enabled = true;
 
-    }
+    //}
 
     /// <summary>
     /// 기본공격 콜라이더 비활성화
     /// </summary>
-    private void offAttack()
-    {
-        //기본공격
-        attackColl.enabled = false;
+    //private void offAttack()
+    //{
+    //    //기본공격
+    //    attackColl.enabled = false;
 
-        //Attack 애니메이션 false로 만들어줌
-        isAttack = false;
+    //    //Attack 애니메이션 false로 만들어줌
+    //    isAttack = false;
 
-    }
+    //}
     /// <summary>
     /// 회전 공격 콜라이더 비활성화
     /// </summary>
-    private void offRotATK()
-    {
-        //회전공격
-        RotATKColl.enabled = false;
+    //private void offRotATK()
+    //{
+    //    //회전공격
+    //    RotATKColl.enabled = false;
 
-        //회전공격 애니메이션을 false로
-        count++;
-        rotCase();
-    }
-    private void rotCase()
-    {
-        Debug.Log(count);
-        switch (count)
-        {
-            case 1:
-                {
-                    if (Input.GetKey(KeyCode.E))
-                    {
-                        isRotATK = true;
-                    }
+    //    //회전공격 애니메이션을 false로
+    //    count++;
+    //    rotCase();
+    //}
+    //private void rotCase()
+    //{
+    //    Debug.Log(count);
+    //    switch (count)
+    //    {
+    //        case 1:
+    //            {
+    //                if (Input.GetKey(KeyCode.E))
+    //                {
+    //                    isRotATK = true;
+    //                }
                     
-                }
-                break;
-            case 2:
-                {
-                    if (Input.GetKey(KeyCode.E))
-                    {
-                        isRotATK = true;
-                    }
-                }
-                break;
-            case 3:
-                {
-                    //Input.GetKey(KeyCode.E);
-                    isRotATK = false;
-                    count = 0;
-                }
-                break;
-            default:
-                break;
-        }
-    }
+    //            }
+    //            break;
+    //        case 2:
+    //            {
+    //                if (Input.GetKey(KeyCode.E))
+    //                {
+    //                    isRotATK = true;
+    //                }
+    //            }
+    //            break;
+    //        case 3:
+    //            {
+    //                //Input.GetKey(KeyCode.E);
+    //                isRotATK = false;
+    //                count = 0;
+    //            }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
 }

@@ -8,9 +8,17 @@ public class Enemy : MonoBehaviour
     private float CurHp = 0;
     public float damage = 1;
 
+    [SerializeField] private Sprite sprHit;
+    private Sprite sprDefault;
+
+    private SpriteRenderer sr;
+
     private void Awake()
     {
         CurHp = MaxHp;
+        sr = GetComponent<SpriteRenderer>();
+
+        sprDefault = sr.sprite;
     }
     // Start is called before the first frame update
     void Start()
@@ -32,5 +40,16 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        else
+        {
+            sr.sprite = sprHit;//하얗게 변함
+            //몇초 후에 어떤 기능을 실행해줘, 매개변수가 없어야 함
+            Invoke("setSpriteDefault", 0.1f);
+        }
+    }
+
+    private void setSpriteDefault()
+    {
+        sr.sprite = sprDefault;
     }
 }
