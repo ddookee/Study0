@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Player;
 
 public class PlayerAnim : MonoBehaviour
 {
+    private SpriteRenderer sr;
     Animator anim;
     BoxCollider2D boxCollider2D;
     [SerializeField] private bool isGround = false;
@@ -20,7 +22,26 @@ public class PlayerAnim : MonoBehaviour
     int count = 0;
 
     float timerRotAtk = 0.0f;
-    [SerializeField] float timerLimitRotAtk = 0.1f; 
+    [Header ("회전공격 쿨타임")]
+    [SerializeField] float timerLimitRotAtk = 0.1f;
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if(gameObject.tag == GameTag.Enemy.ToString())
+    //    {
+    //        sr.color = new Color(1, 0.5f, 0.5f, 1);
+    //        Invoke("backSprite", 0.3f);
+    //    }
+    //}
+    public void Hit()//플레이어가 대미지를 받으면 색이 변하게 전달
+    {
+        sr.color = new Color(1, 0.5f, 0.5f, 1);
+        Invoke("backSprite", 0.3f);
+    }
+    private void backSprite()
+    {
+        sr.color = Color.white;
+    }
 
 
     private void Awake()
@@ -28,6 +49,7 @@ public class PlayerAnim : MonoBehaviour
         anim = GetComponent<Animator>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         player = GetComponentInParent<Player>();
+        sr = GetComponent<SpriteRenderer>();
 
         //플레이어의 공격
         //Transform childPlayerAnim = transform.Find("PlayerAnim");

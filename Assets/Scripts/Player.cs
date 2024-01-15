@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float MaxHp = 3;
     private float CurHp;
 
+    private SpriteRenderer sr;
+
     private Camera mainCam;
 
     //에임 회전할때 우측에 있는지 확인하기 위함
@@ -62,6 +64,8 @@ public class Player : MonoBehaviour
     //private bool isRotATK = false;
     int count = 0;
 
+    PlayerAnim playerAnim;
+
 
 
 
@@ -83,7 +87,8 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         trsHand = transform.GetChild(0);
-
+        sr = GetComponent<SpriteRenderer>();
+        playerAnim = GetComponentInChildren<PlayerAnim>();
         //anim = GetComponent<Animator>();
 
         //플레이어의 공격
@@ -135,6 +140,10 @@ public class Player : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+            else
+            {
+                playerAnim.Hit();//PlayerAnim에게 대미지를 받았으니 색을 바꾸라 명령
+            }
         }
 
         //적에게 근접공격으로 인한 대미지를 입힘
@@ -151,6 +160,8 @@ public class Player : MonoBehaviour
             enemySc.Hit(RotATKDamage);
         }
     }
+
+    
 
     //private void doAnimation()
     //{

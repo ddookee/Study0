@@ -8,8 +8,6 @@ public class Enemy : MonoBehaviour
     private float CurHp = 0;
     public float damage = 1;
 
-    [SerializeField] private Sprite sprHit;
-    private Sprite sprDefault;
 
     private SpriteRenderer sr;
 
@@ -18,7 +16,6 @@ public class Enemy : MonoBehaviour
         CurHp = MaxHp;
         sr = GetComponent<SpriteRenderer>();
 
-        sprDefault = sr.sprite;
     }
     // Start is called before the first frame update
     void Start()
@@ -40,16 +37,17 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        else
+        else//대미지를 받았는데 체력이 0이 아닐때 색을 변경
         {
-            sr.sprite = sprHit;//하얗게 변함
-            //몇초 후에 어떤 기능을 실행해줘, 매개변수가 없어야 함
-            Invoke("setSpriteDefault", 0.1f);
+            sr.color = new Color(1, 0.5f, 0.5f, 1);
+            Invoke("delegateCode", 0.3f); //float만큼 시간이 흐른뒤 delegateCode실행
         }
     }
-
-    private void setSpriteDefault()
+    /// <summary>
+    /// 스프라이트를 원랙 색으로 바꿔줌
+    /// </summary>
+    private void delegateCode()
     {
-        sr.sprite = sprDefault;
+        sr.color = Color.white;
     }
 }
