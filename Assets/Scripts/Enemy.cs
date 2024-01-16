@@ -42,6 +42,7 @@ public class Enemy : MonoBehaviour
             sr.color = new Color(1, 0.5f, 0.5f, 1);
             Invoke("delegateCode", 0.3f); //float만큼 시간이 흐른뒤 delegateCode실행
         }
+        Debug.Log(CurHp);
     }
     /// <summary>
     /// 스프라이트를 원랙 색으로 바꿔줌

@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     [Header("플레이어")]
     [SerializeField] bool isGround = false;
     private float verticalVelocity;
+    [SerializeField,Tooltip("땅에 떨어진 후 복구하는 힘")] float zeroVelocity = 2f;
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] private float jumpForce = 5;
     private bool isJump = false;
@@ -243,7 +244,14 @@ public class Player : MonoBehaviour
 
         else if (isGround == true)
         {
-            verticalVelocity = 0;
+            if (verticalVelocity < 0)//받는 힘이 음수일때 천천히 0으로 만들어줌
+            { 
+                verticalVelocity += Time.deltaTime * zeroVelocity;
+            }
+            else//음수가 아니라면 0
+            { 
+                verticalVelocity = 0; 
+            }
         }
 
         //점프
