@@ -18,6 +18,7 @@ public class ChasePlayer : MonoBehaviour
 
         Vector3 pos = objPlayer.transform.position;
         pos.z = -10;
+        pos.y = 0.5f;
         transform.position = pos;
     }
 }

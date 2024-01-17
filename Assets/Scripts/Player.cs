@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         //anim = GetComponent<Animator>();
 
         //플레이어의 공격
-        Transform childPlayerAnim = transform.Find("PlayerAnim");
+        Transform childPlayerAnim = transform.Find("PlayerAnim");//
 
         trsThrowKnife = childPlayerAnim.Find("ThrowPos");
 
