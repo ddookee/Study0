@@ -26,4 +26,6 @@ public class Npc : MonoBehaviour
         //canvas = GetComponent<Canvas>(); 겟컴포넌트는 꺼져있는 오브젝트를 찾지 못 함
         //canvas = transform.Find("Canvas").GetComponentInChildren<Canvas>(); 활성화 돼있지 않은 오브젝트를 찾을 경우
     }
+
+    
 }
