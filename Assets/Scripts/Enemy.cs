@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Player;
 
 public class Enemy : MonoBehaviour
 {
@@ -8,6 +9,14 @@ public class Enemy : MonoBehaviour
     private float CurHp = 0;
     public float damage = 1;
 
+    [SerializeField,Tooltip("Enemy이동속도")] float moveSpeed;
+    public float MoveSpeed()
+    {
+        return moveSpeed;
+    }
+    [SerializeField] LayerMask ground;
+    Rigidbody2D rigid;
+    [SerializeField,Tooltip("자신앞에 땅이 있는지 없는지 체크하는 오브젝트")] Collider2D trigger;
 
     private SpriteRenderer sr;
 
@@ -15,8 +24,10 @@ public class Enemy : MonoBehaviour
     {
         CurHp = MaxHp;
         sr = GetComponent<SpriteRenderer>();
+        rigid = GetComponent<Rigidbody2D>();
 
     }
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +37,29 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        moving();
+    }
+
+    private void moving()
+    {
+        rigid.velocity = new Vector2(moveSpeed, rigid.velocity.y);
+    }
+
+    private void FixedUpdate()
+    {
+        if (trigger.IsTouchingLayers(ground) == false)//땅이 아니라면 턴
+        {
+            turn();
+        }
+    }
+
+    private void turn()
+    {
+        Vector3 sclae = transform.lossyScale;
+        sclae.x *= -1;
+        transform.localScale = sclae;
+
+        moveSpeed *= -1;
     }
 
     public void Hit(float _damage)

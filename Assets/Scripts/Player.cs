@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
         HitCheck,
         EnemyCheck,
         RotATKCheck,
+        WallCheck,
     }
 
     //Animator anim;
@@ -160,6 +161,16 @@ public class Player : MonoBehaviour
             Enemy enemySc = _collision.GetComponent<Enemy>();
             enemySc.Hit(RotATKDamage);
         }
+
+        else if (_type == hitType.WallCheck && _collision.gameObject.tag == GameTag.Object.ToString())
+        {
+            Enemy enemySc = _collision.GetComponent<Enemy>();
+            Vector3 scale = enemySc.transform.lossyScale;
+            scale.x *= -1;
+            enemySc.transform.localScale = scale;
+            //enemySc.MoveSpeed() *= -1;
+        }
+
     }
 
     
