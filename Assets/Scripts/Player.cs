@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
         HitCheck,
         EnemyCheck,
         RotATKCheck,
-        WallCheck,
+        //WallCheck,
+        Not,
     }
 
     //Animator anim;
@@ -162,14 +163,14 @@ public class Player : MonoBehaviour
             enemySc.Hit(RotATKDamage);
         }
 
-        else if (_type == hitType.WallCheck && _collision.gameObject.tag == GameTag.Object.ToString())
-        {
-            Enemy enemySc = _collision.GetComponent<Enemy>();
-            Vector3 scale = enemySc.transform.lossyScale;
-            scale.x *= -1;
-            enemySc.transform.localScale = scale;
-            //enemySc.MoveSpeed() *= -1;
-        }
+        //else if (_type == hitType.WallCheck && _collision.gameObject.tag == GameTag.Object.ToString())
+        //{
+        //    Enemy enemySc = _collision.GetComponent<Enemy>();
+        //    Vector3 scale = enemySc.transform.lossyScale;
+        //    scale.x *= -1;
+        //    enemySc.transform.localScale = scale;
+        //    //enemySc.MoveSpeed() *= -1;
+        //}
 
     }
 

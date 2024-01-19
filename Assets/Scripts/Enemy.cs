@@ -5,6 +5,11 @@ using static Player;
 
 public class Enemy : MonoBehaviour
 {
+    public enum hitType
+    {
+        WallCheck,
+    }
+
     [SerializeField] private float MaxHp = 3;
     private float CurHp = 0;
     public float damage = 1;
@@ -32,6 +37,17 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         
+    }
+
+    public void TriggerEnter(hitType _type, Collider2D _collision)
+    {
+        if(_type == hitType.WallCheck && _collision.gameObject.tag == GameTag.Object.ToString())
+        {
+            Vector3 scale = transform.lossyScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+            moveSpeed *= -1;
+        }
     }
 
     // Update is called once per frame
