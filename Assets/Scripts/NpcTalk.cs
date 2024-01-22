@@ -27,7 +27,7 @@ public class NpcTalk : MonoBehaviour
 
     private void checkNpcPos()
     {
-        transform.position = trsNpc.position + new Vector3(1f, 0.65f, 0);
+        transform.position = trsNpc.position + new Vector3(1.5f, 1f, 0);
 
     }
 }
